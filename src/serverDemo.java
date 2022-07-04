@@ -2,6 +2,7 @@ import java.net.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
+import java.io.InputStreamReader;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -11,9 +12,12 @@ public class serverDemo extends JFrame implements ActionListener{
 	JTextArea in = new JTextArea(15, 30);   //receive box
 	JPanel pan = new JPanel();
 
+    BufferedReader clientin;
+
     @Override
     public void actionPerformed(ActionEvent e) {        //when click the button
-        System.out.println("hello");
+        System.out.println(out.getText());
+        out.setText("");
     }
 
     public serverDemo(){      //create UI
@@ -23,7 +27,7 @@ public class serverDemo extends JFrame implements ActionListener{
 	    out.setBorder(border);
 		send_botton = new JButton("Send");
 		send_botton.addActionListener(this);     //onclick
-        
+
 		pan.setLayout(new FlowLayout());
 		pan.add(in);
 	    pan.add(out);
@@ -32,32 +36,36 @@ public class serverDemo extends JFrame implements ActionListener{
 		add(pan);
 		setSize(350,370);
 		setVisible(true);
+
+        try{                    //try linking and get stream
+            ServerSocket serverInter = new ServerSocket(6666);
+            Socket clientLinking = serverInter.accept();
+            in.setText("LINKING SUCCESS\n");
+            in.append("IP:"+clientLinking.getInetAddress()+"\n");
+            in.append("Port:"+clientLinking.getPort()+"\n");
+            InputStream inStream = clientLinking.getInputStream();
+            clientin=new BufferedReader(new InputStreamReader(inStream));
+        }catch(IOException e){
+            System.out.println("Error:"+e);
+        }
+
+
+        try{      //receiving messages
+            String message_in=clientin.readLine();
+        
+            while(!message_in.equals("disconnect")){
+                in.append(message_in+"\n");
+                message_in=clientin.readLine();
+            }
+        }catch(IOException e){
+            System.out.println("Error:"+e);
+        }
+        
+        in.append("Linking disconnected!\n");
+
     }
     public static void main(String[] args) {
         serverDemo a=new serverDemo();
-        // BufferedReader clientin;
-        // try{
-        //     ServerSocket a = new ServerSocket(6666);
-
-        //     Socket client=a.accept();
-        //     System.out.println("connection suc!");
-        //     System.out.println("IP:"+client.getInetAddress());
-        //     System.out.println("Port:"+client.getPort());
-
-        //     InputStream in = client.getInputStream();
-        //     clientin = new BufferedReader(new InputStreamReader(in));
-
-        //     String things=clientin.readLine();
-        //     while(!things.equals("disconnect")){
-        //         System.out.println(things);
-        //         things=clientin.readLine();
-        //     }
-            
-        //     System.out.println("connection dis!");
-        //     a.close();
-        // }catch(IOException e){
-        //     System.out.println("Error:"+e);
-        // }
     }
 
 }
