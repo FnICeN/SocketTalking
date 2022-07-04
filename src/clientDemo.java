@@ -13,7 +13,10 @@ public class clientDemo extends JFrame implements ActionListener{
 	JTextArea in = new JTextArea(15, 30);   //receive box
 	JPanel pan = new JPanel();
 
+    BufferedReader clientin;
+
     OutputStream outStream;
+    Socket a;
 
     public clientDemo(){
         super("ClientServer");    //JFrame(title)
@@ -34,11 +37,28 @@ public class clientDemo extends JFrame implements ActionListener{
 
 
         try{
-            Socket a=new Socket("127.0.0.1",6666);
+            a=new Socket("127.0.0.1",6666);
             outStream = a.getOutputStream();
+
+            InputStream inStream = a.getInputStream();
+            outStream=a.getOutputStream();
+            clientin=new BufferedReader(new InputStreamReader(inStream));
         }catch(IOException e){
             System.out.println("Error"+e);
         }
+
+        try{      //receiving messages
+            String message_in=clientin.readLine();
+        
+            while(!message_in.equals("disconnect")){
+                in.append(message_in+"\n");
+                message_in=clientin.readLine();
+            }
+        }catch(IOException e){
+            System.out.println("Error:"+e);
+        }
+
+        try{a.close();}catch(IOException e){System.out.println("Error:"+e);}
     }
 
 

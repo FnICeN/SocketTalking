@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import javax.swing.*;
 import javax.swing.border.Border;
 public class serverDemo extends JFrame implements ActionListener{
+    String message_out;
+
 	JButton send_botton;
 	JTextArea out = new JTextArea(1, 30);   //send box
 	JTextArea in = new JTextArea(15, 30);   //receive box
@@ -14,11 +16,11 @@ public class serverDemo extends JFrame implements ActionListener{
 
     BufferedReader clientin;
 
-    @Override
-    public void actionPerformed(ActionEvent e) {        //when click the button
-        System.out.println(out.getText());
-        out.setText("");
-    }
+    OutputStream outStream;
+    Socket clientLinking;          //to close()
+    
+
+   
 
     public serverDemo(){      //create UI
 		super("ChatServer");    //JFrame(title)
@@ -39,12 +41,16 @@ public class serverDemo extends JFrame implements ActionListener{
 
         try{                    //try linking and get stream
             ServerSocket serverInter = new ServerSocket(6666);
-            Socket clientLinking = serverInter.accept();
+            clientLinking = serverInter.accept();
             in.setText("LINKING SUCCESS\n");
             in.append("IP:"+clientLinking.getInetAddress()+"\n");
             in.append("Port:"+clientLinking.getPort()+"\n");
+
             InputStream inStream = clientLinking.getInputStream();
+            outStream=clientLinking.getOutputStream();
+
             clientin=new BufferedReader(new InputStreamReader(inStream));
+            
         }catch(IOException e){
             System.out.println("Error:"+e);
         }
@@ -62,8 +68,24 @@ public class serverDemo extends JFrame implements ActionListener{
         }
         
         in.append("Linking disconnected!\n");
+        
+        try{clientLinking.close();}catch(IOException e){System.out.println("Error:"+e);}
 
     }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {        //when click the button
+        try{
+            message_out=out.getText();
+            outStream.write((message_out+"\n").getBytes());
+            outStream.flush();
+        }catch(IOException f){
+            System.out.println("Error"+f);
+        }
+        out.setText("");;
+    }
+
+
     public static void main(String[] args) {
         serverDemo a=new serverDemo();
     }
