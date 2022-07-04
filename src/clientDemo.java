@@ -9,6 +9,7 @@ import javax.swing.border.Border;
 public class clientDemo extends JFrame implements ActionListener{
     String message_out;
     JButton send_botton;
+    JTextArea user = new JTextArea("user1",1,30);   //username
 	JTextArea out = new JTextArea(1, 30);   //send box
 	JTextArea in = new JTextArea(15, 30);   //receive box
 	JPanel pan = new JPanel();
@@ -19,14 +20,16 @@ public class clientDemo extends JFrame implements ActionListener{
     Socket a;
 
     public clientDemo(){
-        super("ClientServer");    //JFrame(title)
+        super("ChatClient");    //JFrame(title)
 		Border border = BorderFactory.createLineBorder(Color.orange, 1);
+        user.setBorder(border);
 	    in.setBorder(border);
 	    out.setBorder(border);
 		send_botton = new JButton("Send");
 		send_botton.addActionListener(this);     //onclick
         
 		pan.setLayout(new FlowLayout());
+        pan.add(user);
 		pan.add(in);
 	    pan.add(out);
 		pan.add(send_botton);
@@ -66,7 +69,7 @@ public class clientDemo extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         try{
             message_out=out.getText();
-            outStream.write((message_out+"\n").getBytes());
+            outStream.write((user.getText()+"：\n"+message_out+"\n").getBytes());
             outStream.flush();
         }catch(IOException f){
             System.out.println("Error"+f);
