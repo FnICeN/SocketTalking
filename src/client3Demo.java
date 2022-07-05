@@ -5,13 +5,12 @@ import java.io.*;
 
 import javax.swing.*;
 import javax.swing.border.Border;
-
-public class clientDemo extends JFrame implements ActionListener{
-    static int ID=0;
+public class client3Demo extends JFrame implements ActionListener{
+    static int ID=2;
     String message_out;
     JButton send_button;
     JButton select_button;
-    JTextArea user = new JTextArea("user1",1,30);   //username
+    JTextArea user = new JTextArea("user3",1,30);   //username
 	JTextArea out = new JTextArea(1, 30);   //send box
 	JTextArea in = new JTextArea(15, 30);   //receive box
 	JPanel pan = new JPanel();
@@ -22,7 +21,7 @@ public class clientDemo extends JFrame implements ActionListener{
     Socket a;
 
 
-    public clientDemo(){
+    public client3Demo(){
         super("ChatClient");    //JFrame(title)
 		Border border = BorderFactory.createLineBorder(Color.orange, 1);
         user.setBorder(border);
@@ -31,7 +30,7 @@ public class clientDemo extends JFrame implements ActionListener{
 		send_button = new JButton("发送");
         select_button = new JButton("私聊");
 		send_button.addActionListener(this);     //onclick
-        select_button.addActionListener(new selectDo(this));
+        select_button.addActionListener(new selectDo3(this));
         
 		pan.setLayout(new FlowLayout());
         pan.add(user);
@@ -47,15 +46,13 @@ public class clientDemo extends JFrame implements ActionListener{
 
 
         try{
-            a=new Socket("127.0.0.1",6666);
+            a=new Socket("127.0.0.1",6668);
             outStream = a.getOutputStream();
-            InputStream inStream = this.a.getInputStream();
+            InputStream inStream = a.getInputStream();
             clientin=new BufferedReader(new InputStreamReader(inStream));
         }catch(IOException e){
             System.out.println("Error"+e);
         }
-
-        
 
         try{      //receiving messages
             String message_in=clientin.readLine();
@@ -85,13 +82,14 @@ public class clientDemo extends JFrame implements ActionListener{
     }
 
     public static void main(String[] args) {
-        new clientDemo();
+        new client3Demo();
     }
 }
 
-class selectDo implements ActionListener{
-    clientDemo a;
-    public selectDo(clientDemo a){
+
+class selectDo3 implements ActionListener{
+    client3Demo a;
+    public selectDo3(client3Demo a){
         this.a=a;
     }
     @Override

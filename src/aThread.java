@@ -10,14 +10,14 @@ public class aThread extends Thread implements ActionListener{
     private OutputStream outStream;
     private JTextArea in;
     private JTextArea out;
-    private JButton send_botton;
+    private JButton send_button;
     private String message_out;
 
-    public aThread(ServerSocket serverInter,JTextArea in,JTextArea out,JButton send_botton){
+    public aThread(ServerSocket serverInter,JTextArea in,JTextArea out,JButton send_button){
         this.serverInter=serverInter;
         this.in=in;
         this.out=out;
-        this.send_botton=send_botton;
+        this.send_button=send_button;
     }
 
     @Override
@@ -44,12 +44,13 @@ public class aThread extends Thread implements ActionListener{
 
             
 
-            this.send_botton.addActionListener(this);     //onclick after connect
+            this.send_button.addActionListener(this);     //onclick after connect
 
             InputStream inStream = this.clientLinking.getInputStream();
+            sockets.serverInStream=inStream;
             this.outStream=this.clientLinking.getOutputStream();
 
-            sockets add = new sockets(this.outStream);
+            new sockets(this.outStream);
             
 
             BufferedReader clientin=new BufferedReader(new InputStreamReader(inStream));
@@ -57,17 +58,19 @@ public class aThread extends Thread implements ActionListener{
         
             while(!message_in.equals("disconnect")){
                 this.in.append(message_in+"\n");
-
-                // System.out.println("sending"+message_in);
-                // this.outStream.write((message_in+"\n").getBytes());  //server transmit
-                // this.outStream.flush();
-
-                for(int i=0;i<sockets.index;i++){
-                    System.out.println(i);
-                    sockets.outStreams[i].write((message_in+"\n").getBytes());
-                    sockets.outStreams[i].flush();
+                char flag=message_in.charAt(0);
+                if(flag!='f'){
+                    sockets.outStreams[flag-'0'].write(("（私聊）"+message_in.substring(1)+"\n").getBytes());
+                    this.outStream.write(("（私聊）"+message_in.substring(1)+"\n").getBytes());
                 }
-
+                else{
+                    for(int i=0;i<sockets.index_serverOut;i++){
+                        sockets.outStreams[i].write((message_in.substring(1)+"\n").getBytes());
+                        sockets.outStreams[i].flush();
+                        
+                    }
+                }
+                
                 message_in=clientin.readLine();
             }
 
@@ -79,3 +82,4 @@ public class aThread extends Thread implements ActionListener{
         }
     }
 }
+

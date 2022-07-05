@@ -25,7 +25,7 @@ public class serverDemo extends JFrame{
 		Border border = BorderFactory.createLineBorder(Color.blue, 1);
 	    in.setBorder(border);
 	    out.setBorder(border);
-		send_botton = new JButton("Send");
+		send_botton = new JButton("公告");
 		// send_botton.addActionListener(this);     //onclick
 
 		pan.setLayout(new FlowLayout());
@@ -36,14 +36,20 @@ public class serverDemo extends JFrame{
 		add(pan);
 		setSize(350,370);
 		setVisible(true);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        
 
         try{                    //try linking and get stream
             ServerSocket serverInter1 = new ServerSocket(6666);
             ServerSocket serverInter2 = new ServerSocket(6667);
+            ServerSocket serverInter3 = new ServerSocket(6668);
             aThread v1 = new aThread(serverInter1,in,out,send_botton);
             v1.start();
             aThread v2 = new aThread(serverInter2,in,out,send_botton);
             v2.start();
+            aThread v3 = new aThread(serverInter3,in,out,send_botton);
+            v3.start();
 
             
         }catch(IOException e){
@@ -56,7 +62,7 @@ public class serverDemo extends JFrame{
 
 
     public static void main(String[] args) {
-        serverDemo a=new serverDemo();
+        new serverDemo();
     }
 
 }
