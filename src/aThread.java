@@ -35,7 +35,7 @@ public class aThread extends Thread implements ActionListener{
 
     @Override
     public void run() {
-        System.out.println("now "+Thread.currentThread().getName()+"is running...");
+        System.out.println("now "+Thread.currentThread().getName()+" is running...");
         try{
             this.clientLinking = this.serverInter.accept();
             this.in.append("LINKING SUCCESS\n");
@@ -47,10 +47,9 @@ public class aThread extends Thread implements ActionListener{
             this.send_button.addActionListener(this);     //onclick after connect
 
             InputStream inStream = this.clientLinking.getInputStream();
-            sockets.serverInStream=inStream;
             this.outStream=this.clientLinking.getOutputStream();
 
-            new sockets(this.outStream);
+            new sockets(this.outStream,Thread.currentThread().getName());
             
 
             BufferedReader clientin=new BufferedReader(new InputStreamReader(inStream));

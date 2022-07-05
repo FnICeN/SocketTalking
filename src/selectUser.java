@@ -1,6 +1,9 @@
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.*;
+import java.io.*;
+
 public class selectUser extends JFrame{
     JTextArea user;
     static String temp="f";
@@ -11,6 +14,7 @@ public class selectUser extends JFrame{
 
         user = new JTextArea();
         this.user.setBounds(150,180,100,20);
+
         JTextArea lists = new JTextArea();
         lists.setBounds(20,20,260,150);
 
@@ -37,7 +41,21 @@ public class selectUser extends JFrame{
         setVisible(true);
         add(pan);
 
-        
+        try{
+            Socket a=new Socket("127.0.0.1",7000);
+            InputStream inStream = a.getInputStream();
+            BufferedReader clientin=new BufferedReader(new InputStreamReader(inStream));
+            int rows = clientin.readLine().charAt(0)-'0';
+            String one_row;
+            for(int i=0;i<rows;i++){
+                one_row=clientin.readLine();
+                lists.append(one_row+"\n");
+            }
+            a.close();
+            
+        }catch(IOException e){
+            System.out.println("Error"+e);
+        }
     }
 
 
