@@ -1,3 +1,4 @@
+package server_package;
 import java.io.OutputStream;
 public class sockets {
     public static OutputStream[] outStreams=new OutputStream[10];

@@ -1,7 +1,9 @@
+package server_package;
 import java.net.*;
 import java.io.*;
 import java.io.InputStreamReader;
 import javax.swing.*;
+
 import java.awt.event.*;
 
 public class aThread extends Thread implements ActionListener{
