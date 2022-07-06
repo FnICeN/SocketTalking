@@ -74,8 +74,10 @@ public class client3Demo extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         try{
             message_out=out.getText();
-            outStream.write((selectUser.temp+user.getText()+"： "+message_out+"\n").getBytes());
-            outStream.flush();
+            if(!message_out.equals("disconnect")){
+                outStream.write((selectUser.temp+user.getText()+"： "+message_out+"\n").getBytes());
+                outStream.flush();
+            }else outStream.write("disconnect".getBytes());
         }catch(IOException f){
             System.out.println("Error"+f);
         }

@@ -75,8 +75,15 @@ public class aThread extends Thread implements ActionListener{
                 message_in=clientin.readLine();
             }
 
-            this.in.append("Linking disconnected!\n");
+            this.in.append(Thread.currentThread().getName()+" linking disconnected!\n");
+            this.outStream.write("disconnect\n".getBytes());
             clientLinking.close();
+            for(int i=0;i<sockets.index_serverOut;i++){
+                if(sockets.names[i].equals(Thread.currentThread().getName())){
+                    sockets.names[i]+="（离线）";
+                    break;
+                }
+            }
             
         }catch(IOException e){
             System.out.println("Error:"+e);
